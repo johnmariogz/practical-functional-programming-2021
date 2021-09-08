@@ -6,4 +6,10 @@ scalaVersion := "2.13.6"
 
 idePackagePrefix := Some("berlin.code.functional")
 
-ThisBuild / scalafmtOnCompile := true
+scalafmtOnCompile := true
+
+scalacOptions ++= Seq(
+  "-Ywarn-unused",
+  "-Xfatal-warnings",
+  "-Xlint:_,-byname-implicit",
+)

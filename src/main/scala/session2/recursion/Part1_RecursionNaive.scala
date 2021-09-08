@@ -8,7 +8,7 @@ object Part1_RecursionNaive extends App {
     ???
   }
 
-  val list = List(1, 2, 3)
-  val sum  = sumList(list)
+  val list: List[Int] = List(1, 2, 3)
+  val sum: Int        = sumList(list)
   println(s"The sum of $list is $sum")
 }

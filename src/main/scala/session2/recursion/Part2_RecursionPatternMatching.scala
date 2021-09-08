@@ -9,7 +9,7 @@ object Part2_RecursionPatternMatching extends App {
     else list.head + sumList(list.tail)
   }
 
-  val list = List(1, 2, 3)
-  val sum  = sumList(list)
+  val list: List[Int] = List(1, 2, 3)
+  val sum: Int        = sumList(list)
   println(s"The sum of $list is $sum")
 }
