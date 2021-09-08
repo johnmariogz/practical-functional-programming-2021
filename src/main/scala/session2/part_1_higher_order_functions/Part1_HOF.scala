@@ -1,5 +1,5 @@
 package berlin.code.functional
-package session2.part_1_high_order_functions
+package session2.part_1_higher_order_functions
 
 object Part1_HOF extends App {
   val list = List(0, 1, 2, 3, 4, 6, 7, 8, 9)

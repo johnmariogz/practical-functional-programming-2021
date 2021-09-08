@@ -1,5 +1,5 @@
 package berlin.code.functional
-package session2.part_1_high_order_functions
+package session2.part_1_higher_order_functions
 
 object Part2_HOF_OwnFunction extends App {
 
