@@ -1,5 +1,5 @@
 package berlin.code.functional
-package session2.recursion
+package session2.part_4_recursion
 
 object Part3_TailRecursion extends App {
   // Build a recursive function that sums the elements of a list

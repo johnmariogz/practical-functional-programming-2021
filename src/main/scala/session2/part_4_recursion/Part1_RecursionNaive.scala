@@ -1,12 +1,11 @@
 package berlin.code.functional
-package session2.recursion
+package session2.part_4_recursion
 
-object Part2_RecursionPatternMatching extends App {
+object Part1_RecursionNaive extends App {
   // Build a recursive function that sums the elements of a list
-  // TODO use pattern matching
+  // TODO use if-else
   def sumList(list: List[Int]): Int = {
-    if (list.isEmpty) 0
-    else list.head + sumList(list.tail)
+    ???
   }
 
   val list: List[Int] = List(1, 2, 3)

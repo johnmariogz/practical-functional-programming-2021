@@ -1,5 +1,5 @@
 package berlin.code.functional
-package session2.pattern_matching
+package session2.part_3_pattern_matching
 
 object Part3_PatternMatchingCase extends App {
   sealed trait User
