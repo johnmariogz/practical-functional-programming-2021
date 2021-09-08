@@ -1,5 +1,5 @@
 package berlin.code.functional
-package session2.part_2_partial_functions
+package session2.part_2_partially_applied_functions
 
 object Part1_PartialllyAppliedFunctions extends App {
   //           f: Int => Int => Int
