@@ -1,5 +1,4 @@
-package berlin.code.functional
-package session2.part_3_pattern_matching
+package lectures.session2.part_3_pattern_matching
 
 object Part4_PatternMatchingList extends App {
   //  listOne = 1 :: (2  :: Nil)

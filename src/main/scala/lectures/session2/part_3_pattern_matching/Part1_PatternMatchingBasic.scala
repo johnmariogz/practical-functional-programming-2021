@@ -1,5 +1,4 @@
-package berlin.code.functional
-package session2.part_3_pattern_matching
+package lectures.session2.part_3_pattern_matching
 
 object Part1_PatternMatchingBasic extends App {
   // TODO Print "We have a Bar" or "A Bizz just came in"

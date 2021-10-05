@@ -1,5 +1,4 @@
-package berlin.code.functional
-package session2.part_3_pattern_matching
+package lectures.session2.part_3_pattern_matching
 
 import scala.util.{Failure, Success, Try}
 
