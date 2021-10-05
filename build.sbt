@@ -4,8 +4,6 @@ version := "0.1"
 
 scalaVersion := "2.13.6"
 
-idePackagePrefix := Some("berlin.code.functional")
-
 scalafmtOnCompile := true
 
 scalacOptions ++= Seq(
@@ -13,3 +11,9 @@ scalacOptions ++= Seq(
   "-Xfatal-warnings",
   "-Xlint:_,-byname-implicit",
 )
+
+libraryDependencies ++= Seq(
+  "org.scalatest" %% "scalatest" % "3.2.10" % Test
+)
+
+Test / fork := true
