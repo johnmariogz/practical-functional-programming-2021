@@ -8,9 +8,13 @@ object Part2_HOF_OwnFunction extends App {
     s"Input was $number and after using HOF the result was $result"
   }
 
-  val executionOne = applyFunction(20, ???) // TODO Make it invert the number (e.g. 10 => 01)
+  def invertInteger(i: Int): String = i.toString.reverse
+
+  val executionOne = applyFunction(20, invertInteger)
   println(s"First execution is: $executionOne")
 
-  val executionTwo = applyFunction(30, ???) // TODO Make it Duplicate the string (e.g. 11 => 1111)
+  def duplicateInteger(i: Int): String = s"$i$i"
+
+  val executionTwo = applyFunction(30, duplicateInteger)
   println(s"Second execution is: $executionTwo")
 }
