@@ -1,12 +1,16 @@
 package lectures.session2.part_4_recursion
 
+import scala.annotation.tailrec
+
 object Part3_TailRecursion extends App {
   // Build a recursive function that sums the elements of a list
   // TODO Make it work for large lists (10.000 or more elements)
-  def sumList(list: List[Int]): Int = {
+
+  @tailrec
+  def sumList(list: List[Int], acc: Int = 0): Int = {
     list match {
-      case Nil          => 0
-      case head :: tail => head + sumList(tail)
+      case Nil => acc
+      case head :: tail => sumList(tail, head + acc)
     }
   }
 
@@ -14,7 +18,7 @@ object Part3_TailRecursion extends App {
   val smallSum: Int        = sumList(listSmall)
   println(s"The sum of $listSmall is $smallSum")
 
-  val listLarge: List[Int] = 1.to(10_000).toList
+  val listLarge: List[Int] = 1.to(100_000).toList
   val largeSum: Int        = sumList(listLarge)
-  println(s"The sum of List(1, ..., 10_000) is $largeSum")
+  println(s"The sum of List(1, ..., 100_000) is $largeSum")
 }
