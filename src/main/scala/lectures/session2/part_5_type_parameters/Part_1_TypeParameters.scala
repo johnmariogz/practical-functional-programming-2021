@@ -14,10 +14,9 @@ object Part_1_TypeParameters extends App {
   val containerString = StringContainer("foobar")
   println(s"containerString = $containerString - ${foo(containerString)}")
 
-
   def foo(container: Container[_]): String = {
     container match {
-      case IntContainer(value) => s"${value * value}"
+      case IntContainer(value)    => s"${value * value}"
       case StringContainer(value) => s"$value - $value"
     }
   }

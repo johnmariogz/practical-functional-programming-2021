@@ -6,7 +6,7 @@ object Part1_PartialllyAppliedFunctions extends App {
 
   // TODO Make all numbers multiply by 7
   val multiplyBy7: Int => Int = multiply(_)(7)
-  val valueOf3: Int = multiplyBy7(3)
+  val valueOf3: Int           = multiplyBy7(3)
   println(s"Original was 3 and multiplied is $valueOf3")
   val valueOf7: Int = multiplyBy7(7)
   println(s"Original was 7 and multiplied is $valueOf7")

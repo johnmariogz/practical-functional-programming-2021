@@ -9,7 +9,7 @@ object Part3_TailRecursion extends App {
   @tailrec
   def sumList(list: List[Int], acc: Int = 0): Int = {
     list match {
-      case Nil => acc
+      case Nil          => acc
       case head :: tail => sumList(tail, head + acc)
     }
   }
