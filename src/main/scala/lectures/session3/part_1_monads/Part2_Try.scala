@@ -1,8 +1,10 @@
-package lectures.session3.part_1_option
+package lectures.session3.part_1_monads
 
-object Part3_Either extends App {
+import scala.util.Try
+
+object Part2_Try extends App {
   // TODO: Return an Int IFF the number is composed of [0-9]+
-  def extractNumber(string: String): Either[String, Int] = {
+  def extractNumber(string: String): Try[Int] = {
     ???
   }
 
@@ -20,14 +22,14 @@ object Part3_Either extends App {
 
   // TODO: If the number is odd, add 1 to it and return it
   // TODO: If the number is even, ignore it
-  def doSomethingWithTheNumber(t: Either[String, Int]): Either[String, Int] = {
+  def doSomethingWithTheNumber(t: Try[Int]): Try[Int] = {
     ???
   }
 
   val resultOdd = doSomethingWithTheNumber(resultNumber)
   println(s"After operating with '$resultNumber' the result is $resultOdd")
 
-  val evenInput  = Right(2)
+  val evenInput  = Try(2)
   val resultEven = doSomethingWithTheNumber(evenInput)
   println(s"After operating with '$evenInput' the result is $resultEven")
 }

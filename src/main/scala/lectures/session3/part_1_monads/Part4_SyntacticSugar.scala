@@ -1,4 +1,4 @@
-package lectures.session3.part_1_option
+package lectures.session3.part_1_monads
 
 object Part4_SyntacticSugar extends App {
   private val users = List(
@@ -23,13 +23,7 @@ object Part4_SyntacticSugar extends App {
   def findUserPosts(userId: String): Option[List[Post]] = posts.get(userId)
 
   // TODO: Build a function that returns ONLY users of that age that HAVE posts
-  def findUserOfAgeWithPosts(age: Int): Option[UserWithPosts] = {
-    findUserByAge(age).flatMap { user =>
-      findUserPosts(user.id).map { posts =>
-        UserWithPosts(user, posts)
-      }
-    }
-  }
+  def findUserOfAgeWithPosts(age: Int): Option[UserWithPosts] = ???
 
   val result19 = findUserOfAgeWithPosts(19)
   println(s"For age 19 the result is $result19")

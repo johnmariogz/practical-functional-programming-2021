@@ -1,4 +1,4 @@
-package lectures.session3.part_1_option
+package lectures.session3.part_1_monads
 
 object Helpers {
   def readInput(hint: String): String = {

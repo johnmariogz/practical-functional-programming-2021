@@ -1,4 +1,4 @@
-package lectures.session3.part_1_option
+package lectures.session3.part_1_monads
 
 object Part1_Option extends App {
   // TODO: Return an Int IFF the number is composed of [0-9]+

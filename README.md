@@ -9,3 +9,12 @@
 - Pattern Matching
 - Recursion
 
+## Session 3
+- Monads and its uses
+  - `Option` (Scala)
+  - `Try` (Scala)
+  - `Either` (Scala)
+- Concurrency and parallel computations
+  - Mutability and concurrency dangers
+  - Parallel data structures
+  - Eventual Computations
