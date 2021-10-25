@@ -13,7 +13,8 @@ scalacOptions ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.2.10" % Test
+  "org.scalatest" %% "scalatest" % "3.2.10" % Test,
+  "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.4"
 )
 
 Test / fork := true

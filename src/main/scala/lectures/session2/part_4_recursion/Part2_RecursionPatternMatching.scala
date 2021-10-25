@@ -5,7 +5,7 @@ object Part2_RecursionPatternMatching extends App {
   // TODO use pattern matching
   def sumList(list: List[Int]): Int = {
     list match {
-      case Nil => 0
+      case Nil          => 0
       case head :: tail => head + sumList(tail)
     }
   }

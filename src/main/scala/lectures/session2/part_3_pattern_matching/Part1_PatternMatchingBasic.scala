@@ -6,7 +6,7 @@ object Part1_PatternMatchingBasic extends App {
     name match {
       case "Bar"  => "We have a Bar"
       case "Bizz" => "A Bizz just came in"
-      case _ => "I don't know"
+      case _      => "I don't know"
     }
   }
 

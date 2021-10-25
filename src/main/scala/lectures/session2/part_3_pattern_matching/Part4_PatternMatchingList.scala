@@ -10,7 +10,8 @@ object Part4_PatternMatchingList extends App {
   //  TODO for the rest "Oh look! I found $x on the first position AND $y elements are left"
   def giveListHeadAndTailSize(list: List[Int]): String = {
     list match {
-      case head :: tail => s"Oh look! I found $head on the first position AND $tail elements are left"
+      case head :: tail =>
+        s"Oh look! I found $head on the first position AND $tail elements are left"
       case Nil => "This list is empty!"
     }
   }

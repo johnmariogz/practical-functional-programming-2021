@@ -9,7 +9,7 @@ object Part2_PatternMatchingSealed extends App {
   // TODO Print "We have a Bar" or "A Bizz just came in"
   def giveBackGreeting(foo: Foo): String = {
     foo match {
-      case _: Bar => "We have a Bar"
+      case _: Bar  => "We have a Bar"
       case _: Bizz => "A Bizz just came in"
       case _: Bezz => "It's indeed Bezz"
     }
