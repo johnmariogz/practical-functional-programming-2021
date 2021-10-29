@@ -16,7 +16,7 @@ object Exercise4_Futures_Basic extends App {
 
   val f3 = Future {
     sleep(400)
-    2
+    3
   }
 
   val result = for {
