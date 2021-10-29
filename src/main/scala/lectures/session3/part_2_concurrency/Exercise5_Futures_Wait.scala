@@ -21,17 +21,24 @@ object Exercise5_Futures_Wait extends App {
 
   Helpers.measureTime("sequential") {
     val multiplicationSequential = for {
-      n1 <- f1
-      n2 <- f2
-      n3 <- f3
-    } yield n1 * n2 * n3
+      n2 <- Future.sequence(List(f1, f2, f3))
+    } yield n2.reduce(_ * _)
 
     val resultSequential = Await.result(multiplicationSequential, 330.millis)
     println(s"result sequential is $resultSequential")
   }
 
   Helpers.measureTime("parallel") {
-    val multiplicationParallel = ??? // TODO [parallel] calculate the multiplications
+    val value: List[Future[Int]] = List(
+      f1,
+      f2,
+      f3
+    )
+
+    // List[Int] => Int
+    val multiplicationParallel: Future[Int] = Future.sequence(value).map { list =>
+      list.reduce(_ * _)
+    }
 
     val resultParallel = Await.result(multiplicationParallel, 220.millis)
     println(s"result parallel is $resultParallel")

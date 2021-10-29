@@ -23,11 +23,16 @@ object Part4_SyntacticSugar extends App {
   def findUserPosts(userId: String): Option[List[Post]] = posts.get(userId)
 
   // TODO: Build a function that returns ONLY users of that age that HAVE posts
-  def findUserOfAgeWithPosts(age: Int): Option[UserWithPosts] = ???
+  def findUserOfAgeWithPosts(age: Int): Option[UserWithPosts] = {
+    for {
+      user <- findUserByAge(age)
+      posts <- findUserPosts(user.id)
+    } yield UserWithPosts(user, posts)
+  }
 
   val result19 = findUserOfAgeWithPosts(19)
   println(s"For age 19 the result is $result19")
 
   val result26 = findUserOfAgeWithPosts(26)
-  println(s"For age 19 the result is $result26")
+  println(s"For age 26 the result is $result26")
 }

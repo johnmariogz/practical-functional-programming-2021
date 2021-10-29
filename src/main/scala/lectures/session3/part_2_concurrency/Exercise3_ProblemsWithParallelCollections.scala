@@ -21,4 +21,6 @@ object Exercise3_ProblemsWithParallelCollections extends App {
     val reduced = list.reduce(_ - _)
     println(s"reduced = $reduced")
   }
+
+  println(1.to(20).toList.reduce(_ - _))
 }
