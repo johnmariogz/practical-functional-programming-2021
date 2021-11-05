@@ -8,14 +8,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.{Duration, DurationInt}
 import scala.concurrent.{Await, Future}
 
-object Part2_ActorsWithUsage extends App {
+object Part2_ActorsInRealWorld extends App {
   implicit val timeout: Timeout = Timeout(1.second)
 
   case class StoreUrl(url: String)
   case class StoredUrlResponse(id: Int, url: String)
   case class GetUrl(id: Int)
 
-  class DatabaseActor extends Actor {
+  class CacheDBActor extends Actor {
     // Mutable hashmap - mutability is contained within a block
     // The data structure can be used here safely, even though is not thread-safe, WHY?
     private val urls = collection.mutable.HashMap[Int, String]()
@@ -55,7 +55,7 @@ object Part2_ActorsWithUsage extends App {
   }
 
   val actorSystem = ActorSystem("example")
-  val actor       = actorSystem.actorOf(Props[DatabaseActor](), "handler-actor")
+  val actor       = actorSystem.actorOf(Props[CacheDBActor](), "cache-db-actor")
 
   val urls = List(
     "http://www.google.com",
