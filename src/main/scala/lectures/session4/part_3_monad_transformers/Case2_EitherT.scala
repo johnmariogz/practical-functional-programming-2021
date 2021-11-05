@@ -1,4 +1,4 @@
-package lectures.session4.part_2_monad_transformers
+package lectures.session4.part_3_monad_transformers
 
 import exercises.session3.FakeBlog
 import exercises.session3.FakeBlog._

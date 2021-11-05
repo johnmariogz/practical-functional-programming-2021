@@ -1,4 +1,4 @@
-package lectures.session4.part_1_actor_model
+package lectures.session4.part_2_actor_model
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 
