@@ -11,10 +11,10 @@ object FakeBlog {
   case class Comment(id: CommentId, blogPostId: BlogPostId, userId: UserId, text: String)
   case class Score(userId: UserId, score: Double)
 
-  val user1 = User(UserId("user1"), "authorName1")
-  val user2 = User(UserId("user2"), "authorName2")
-  val user3 = User(UserId("user3"), "authorName3")
-  val user4 = User(UserId("user3"), "authorName3")
+  private[session3] val user1 = User(UserId("user1"), "authorName1")
+  private[session3] val user2 = User(UserId("user2"), "authorName2")
+  private[session3] val user3 = User(UserId("user3"), "authorName3")
+  private[session3] val user4 = User(UserId("user4"), "authorName3")
 
   private val users: Map[UserId, User] = Map(
     user1.id -> user1,
@@ -57,14 +57,14 @@ object FakeBlog {
     .groupBy(_.userId)
 
   // TODO What if the user is NOT present?
-  def getUser(userId: UserId): Future[User] =
-    Future.successful(users(userId))
+  def getUser(userId: UserId): Future[Option[User]] =
+    Future.successful(users.get(userId))
 
   def getBlogPosts(user: User): Future[List[BlogPost]] =
-    Future.successful(blogPostsPerUser(user.id))
+    Future.successful(blogPostsPerUser.getOrElse(user.id, Nil))
 
   def getComments(user: User): Future[List[Comment]] =
-    Future.successful(commentsPerBlogPost(user.id))
+    Future.successful(commentsPerBlogPost.getOrElse(user.id, Nil))
 
   def getAllBlogPosts(): Future[List[BlogPost]] =
     Future.successful(blogPostsPerUser.values.flatten.toList)

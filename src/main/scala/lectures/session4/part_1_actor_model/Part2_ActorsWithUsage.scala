@@ -1,4 +1,4 @@
-package lectures.session4.part1_actor_model
+package lectures.session4.part_1_actor_model
 
 import akka.actor._
 import akka.pattern._
@@ -18,17 +18,17 @@ object Part2_ActorsWithUsage extends App {
   class DatabaseActor extends Actor {
     // Mutable hashmap - mutability is contained within a block
     // The data structure can be used here safely, even though is not thread-safe, WHY?
-    val urls = collection.mutable.HashMap[Int, String]()
+    private val urls = collection.mutable.HashMap[Int, String]()
 
     // TODO Count and print how many times storeUrl has been called, how to do it?
     override def receive: Receive = {
       case StoreUrl(url) =>
         val result = storeUrl(url)
-        sender() ! result
+        sender().!(result)
 
       case GetUrl(id) =>
         val result = getUrl(id)
-        sender() ! result
+        sender().!(result)
     }
 
     private def storeUrl(url: String): StoredUrlResponse = {
@@ -66,19 +66,27 @@ object Part2_ActorsWithUsage extends App {
   )
 
   // First step - store the Urls, all at the same time
-  val storeResult = Future.traverse(urls)(url => actor ? StoreUrl(url))
+  def sendStoreUrlMessage(url: String): Future[Any] = {
+    actor.ask(StoreUrl(url))
+  }
+
+  val storeResult = Future.traverse(urls)(sendStoreUrlMessage(_))
   val messages    = Await.result(storeResult, 1.second)
   println(messages)
 
   // Second step
-  val ids = List(
+  val ids = Vector(
     1379822052, // www.berlin.de
     -565433797, // www.zalando.de
     1379822052, // www.berlin.de
     0           // No URL
   )
 
-  val fetchResult = Future.traverse(ids)(id => actor ? GetUrl(id))
+  def sendGetUrlMessage(id: Int): Future[Any] =
+    actor.ask(GetUrl(id))
+
+  // Parallel search
+  val fetchResult = Future.traverse(ids)(sendGetUrlMessage)
   val storedUrls  = Await.result(fetchResult, 1.second)
   println(storedUrls)
 
