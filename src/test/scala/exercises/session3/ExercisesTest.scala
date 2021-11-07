@@ -9,34 +9,36 @@ class ExercisesTest extends AnyFlatSpec with Matchers with ScalaFutures {
   import Exercises._
 
   "#calculateUserScore" should "calculate the score for user1" in {
-    calculateUserScore("user1").futureValue shouldBe Score(UserId("user1"), 3.5d)
+    calculateUserScore("user1").futureValue shouldBe Some(Score(UserId("user1"), 3.5d))
   }
 
   "#calculateUserScore" should "calculate the score for user2" in {
-    calculateUserScore("user2").futureValue shouldBe Score(UserId("user2"), 1.3d)
+    calculateUserScore("user2").futureValue shouldBe Some(Score(UserId("user2"), 1.3d))
   }
 
   "#calculateUserScore" should "calculate the score for user4" in {
-    calculateUserScore("user2").futureValue shouldBe Score(UserId("user4"), 0.0d)
+    calculateUserScore("user4").futureValue shouldBe Some(Score(UserId("user4"), 0.0d))
   }
 
-  "#calculateUserScore" should "calculate the score for do-not-exist" ignore {
-    // TODO Add a test for the case where the user does NOT exist
+  "#calculateUserScore" should "calculate the score for not-present" in {
+    calculateUserScore("not-present").futureValue shouldBe None
   }
 
-  // TODO: Extend the method so that users WITHOUT posts are also considered
   "#countPostsPerAuthor" should "count all the posts per author" in {
     countPostsPerAuthor().futureValue should contain theSameElementsAs List(
       (user1, 3),
-      (user2, 1)
+      (user2, 1),
+      (user3, 0),
+      (user4, 0)
     )
   }
 
-  // TODO: Extend the method so that users WITHOUT comments are also considered
   "#countCommentsPerAuthor" should "count all the comments per author" in {
     countCommentsPerAuthor().futureValue should contain theSameElementsAs List(
       (user1, 5),
-      (user2, 3)
+      (user2, 3),
+      (user3, 0),
+      (user4, 0)
     )
   }
 }
