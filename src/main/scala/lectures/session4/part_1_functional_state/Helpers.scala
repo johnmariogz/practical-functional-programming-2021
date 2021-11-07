@@ -36,7 +36,7 @@ object Helpers {
 
   // Fancy wrapper around a protected var
   sealed trait STRef[S, A] { // Type S is NOT the type of the cell and it's not used, but WE need it for ST[S, ?]
-    protected var cell: A // Mutability is present AND controlled
+    protected var cell: A // Mutability is local AND controlled
     def read: ST[S, A] = ST(cell)
     def write(a: A): ST[S, Unit] = new ST[S, Unit] {
       override protected def run(s: S): (Unit, S) = {
