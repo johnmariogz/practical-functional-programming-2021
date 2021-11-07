@@ -40,19 +40,16 @@ object Actors {
   }
 
   case class Purchase(drink: Drink, tip: Double)
-
   case object GetTips
-
-  case class TotalTips(tips: Double)
+  case class TotalTipsResponse(tips: Double)
 
   class CashierActor(baristaOne: ActorRef, baristaTwo: ActorRef) extends Actor {
-    // TODO: Balance the baristas so that they handle orders in an alternate manner
-    private var tips = 0d
     private val baristas = scala.collection.mutable.Queue[ActorRef](
       baristaOne,
       baristaTwo
     )
 
+    // Balance the baristas so that they handle orders in an alternate manner
     private def barista: ActorRef = {
       val actor = baristas.dequeue()
       baristas.enqueue(actor)
@@ -60,15 +57,14 @@ object Actors {
     }
 
     override def receive: Receive = {
-      case Purchase(drink, tip) =>
-        // TODO Store the tips
-        tips += tip
-        // TODO Pass the drink orders to the barista
-        barista ! Order(drink, sender())
+      case Purchase(drink, _) =>
+        // TODO Store the tips (coming within Purchase)
+
+        // Pass the drink orders one of the baristas
+        barista ! Order(drink, ???) // TODO: Pass the customer (the sender())
 
       case GetTips =>
-        // TODO: Send back the message informing how much has been left in tips
-        sender() ! TotalTips(tips)
+      // TODO: Send back the message informing how much has been left in tips
     }
   }
 
@@ -97,10 +93,9 @@ object Actors {
       // TODO: Call the inventory to see what is available and get it out
       val preparationResult: Future[PurchasedOrder] = for {
         storage <- (inventory ? GetFromStorage(drink.storageIngredient)).mapTo[StorageResult]
-        fridge  <- (inventory ? GetFromFridge(drink.fridgeIngredient)).mapTo[FridgeResult]
-      } yield prepareOrder(drink, storage, fridge)
+        // TODO: Call the inventory for the fridge ingredients
+      } yield prepareOrder(drink, storage, ???)
 
-      // TODO: Send back to the customer, use akka.pattern._ and Future(...).pipeTo(actor)
       preparationResult.pipeTo(customer)
     }
   }
@@ -118,53 +113,36 @@ object Actors {
   case class FridgeIngredientUsed(ingredient: FridgeIngredient) extends FridgeResult
 
   class InventoryActor extends Actor {
-    private val fridge = scala.collection.mutable.HashMap[FridgeIngredient, Int](
+    val fridge = scala.collection.mutable.HashMap[FridgeIngredient, Int](
       Milk -> 4
     )
 
-    private val storage = scala.collection.mutable.HashMap[StorageIngredient, Int](
+    val storage = scala.collection.mutable.HashMap[StorageIngredient, Int](
       Coffee -> 6,
       Cocoa  -> 2
     )
 
     override def receive: Receive = {
-      case GetFromFridge(ingredient) =>
-        // TODO Reduce items from the fridge (if present) and send back to whoever called
-        val answer = getAndReduceFromFridge(ingredient)
-        sender() ! answer
+      case _: GetFromFridge =>
+      // TODO: Call getAndReduceFromFridge() and send back to whoever called (use sender() to find the caller)
 
-      case GetFromStorage(ingredient) =>
-        // TODO Reduce items from the storage (if present) and send back to whoever called
-        val answer = getAndReduceFromStorage(ingredient)
-        sender() ! answer
+      case _: GetFromStorage =>
+      // TODO: Call getAndReduceFromStorage() and send back result to whoever called (use sender() to find the caller)
     }
 
-    private def getAndReduceFromStorage(ingredient: StorageIngredient): StorageResult = {
-      storage.get(ingredient) match {
-        case Some(left) if left > 0 =>
-          storage.put(ingredient, left - 1)
-          StorageIngredientUsed(ingredient)
-
-        case Some(_) | None =>
-          StorageOutOfStock(ingredient)
-      }
+    // TODO: Reduce from the storage stock IFF the ingredient's quantity is positive
+    def getAndReduceFromStorage(ingredient: StorageIngredient): StorageResult = {
+      // If there's enough of the ingredient: return StorageIngredientUsed
+      // If not enough: return StorageOutOfStock
+      ???
     }
 
-    private def getAndReduceFromFridge(ingredient: Option[FridgeIngredient]): FridgeResult =
-      ingredient match {
-        case Some(ingredient) =>
-          fridge.get(ingredient) match {
-            case Some(left) if left > 0 =>
-              fridge.put(ingredient, left - 1)
-              FridgeIngredientUsed(ingredient)
-
-            case Some(_) | None =>
-              FridgeOutOfStock(ingredient)
-          }
-
-        case None =>
-          FridgeIngredientNotNeeded
-      }
+    // TODO: Reduce from the fridge stock IFF the ingredient's quantity is positive
+    def getAndReduceFromFridge(ingredient: Option[FridgeIngredient]): FridgeResult = {
+      // If there's enough of the ingredient: return FridgeIngredientUsed
+      // If not enough: return FridgeOutOfStock
+      // If the ingredient is not needed: return FridgeIngredientNotNeeded
+      ???
+    }
   }
-
 }

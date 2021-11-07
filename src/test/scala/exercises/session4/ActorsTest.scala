@@ -79,10 +79,10 @@ class ActorsTest
 
       And("11.5 EUR should be present in tips between both cashiers")
       val totalTips = for {
-        tipsCashierOne <- (cashierOne ? GetTips).mapTo[TotalTips]
-        tipsCashierTwo <- (cashierTwo ? GetTips).mapTo[TotalTips]
-      } yield TotalTips(tipsCashierOne.tips + tipsCashierTwo.tips)
-      totalTips.futureValue shouldBe TotalTips(11.5d)
+        tipsCashierOne <- (cashierOne ? GetTips).mapTo[TotalTipsResponse]
+        tipsCashierTwo <- (cashierTwo ? GetTips).mapTo[TotalTipsResponse]
+      } yield TotalTipsResponse(tipsCashierOne.tips + tipsCashierTwo.tips)
+      totalTips.futureValue shouldBe TotalTipsResponse(11.5d)
     }
   }
 }
