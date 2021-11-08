@@ -5,16 +5,16 @@ import scala.concurrent.Future
 object FakeBlog {
   case class UserId(id: String) extends AnyVal
   case class User(id: UserId, authorName: String)
-  case class BlogPostId(id: Int)
+  case class BlogPostId(id: Int) extends AnyVal
   case class BlogPost(id: BlogPostId, userId: UserId, title: String, text: String)
-  case class CommentId(id: Int)
+  case class CommentId(id: Int) extends AnyVal
   case class Comment(id: CommentId, blogPostId: BlogPostId, userId: UserId, text: String)
   case class Score(userId: UserId, score: Double)
 
-  val user1 = User(UserId("user1"), "authorName1")
-  val user2 = User(UserId("user2"), "authorName2")
-  val user3 = User(UserId("user3"), "authorName3")
-  val user4 = User(UserId("user3"), "authorName3")
+  private[session3] val user1 = User(UserId("user1"), "authorName1")
+  private[session3] val user2 = User(UserId("user2"), "authorName2")
+  private[session3] val user3 = User(UserId("user3"), "authorName3")
+  private[session3] val user4 = User(UserId("user4"), "authorName4")
 
   private val users: Map[UserId, User] = Map(
     user1.id -> user1,
@@ -56,19 +56,15 @@ object FakeBlog {
   )
     .groupBy(_.userId)
 
-  // TODO What if the user is NOT present?
-  def getUser(userId: UserId): Future[User] =
-    Future.successful(users(userId))
+  def getUser(userId: UserId): Future[Option[User]] =
+    Future.successful(users.get(userId))
+
+  def getAllUsers(): Future[List[User]] =
+    Future.successful(users.values.toList)
 
   def getBlogPosts(user: User): Future[List[BlogPost]] =
-    Future.successful(blogPostsPerUser(user.id))
+    Future.successful(blogPostsPerUser.getOrElse(user.id, Nil))
 
   def getComments(user: User): Future[List[Comment]] =
-    Future.successful(commentsPerBlogPost(user.id))
-
-  def getAllBlogPosts(): Future[List[BlogPost]] =
-    Future.successful(blogPostsPerUser.values.flatten.toList)
-
-  def getAllComments(): Future[List[Comment]] =
-    Future.successful(commentsPerBlogPost.values.flatten.toList)
+    Future.successful(commentsPerBlogPost.getOrElse(user.id, Nil))
 }

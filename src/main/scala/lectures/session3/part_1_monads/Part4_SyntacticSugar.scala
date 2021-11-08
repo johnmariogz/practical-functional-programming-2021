@@ -25,7 +25,7 @@ object Part4_SyntacticSugar extends App {
   // TODO: Build a function that returns ONLY users of that age that HAVE posts
   def findUserOfAgeWithPosts(age: Int): Option[UserWithPosts] = {
     for {
-      user <- findUserByAge(age)
+      user  <- findUserByAge(age)
       posts <- findUserPosts(user.id)
     } yield UserWithPosts(user, posts)
   }
