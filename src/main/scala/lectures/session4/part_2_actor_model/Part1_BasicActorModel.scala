@@ -12,17 +12,7 @@ object Part1_BasicActorModel extends App {
   case object Finish
 
   class HelloActor extends Actor {
-    override def receive: Receive = {
-      case Message(message) =>
-        print(s"You said '$message'\nAnd '$message' to you as well!")
-
-      case Finish =>
-        println("Got to the end. Bye!")
-
-      // TODO What happens if this is removed and an unhandled message is sent?
-      case unknown =>
-        println(s"I didn't get that! '$unknown'")
-    }
+    override def receive: Receive = ???
   }
 
   val actorSystem = ActorSystem("basic-example")
@@ -35,9 +25,9 @@ object Part1_BasicActorModel extends App {
     println("Type something (q to quit): ")
     val input = StdIn.readLine()
     if (input == "q")
-      actorRef ! Finish
+      ??? // TODO: Send Finish to the actor
     else {
-      actorRef ! Message(input)
+      //  TODO: Send Message to the actor
       execute(actorRef)
     }
   }
