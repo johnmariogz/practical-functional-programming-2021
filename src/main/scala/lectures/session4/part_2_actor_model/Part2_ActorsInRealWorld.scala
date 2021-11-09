@@ -1,7 +1,6 @@
 package lectures.session4.part_2_actor_model
 
 import akka.actor._
-import akka.pattern._
 import akka.util.Timeout
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -22,31 +21,24 @@ object Part2_ActorsInRealWorld extends App {
 
     // TODO Count and print how many times storeUrl has been called, how to do it?
     override def receive: Receive = {
-      case StoreUrl(url) =>
-        val result = storeUrl(url)
-        sender().!(result)
+      case StoreUrl(_) =>
+      // TODO Send back to the calling actor the result
 
-      case GetUrl(id) =>
-        val result = getUrl(id)
-        sender().!(result)
+      case GetUrl(_) =>
+      // TODO Send back to the calling actor the result
+
     }
 
-    private def storeUrl(url: String): StoredUrlResponse = {
-      val urlId = url.##
-      println(s"[info] Trying to store '$url'")
-      if (urls.get(urlId).isEmpty) {
-        urls.put(urlId, url)
-      } else {
-        println(s"[warn] '$url' is already present!")
-      }
-
-      StoredUrlResponse(urlId, url)
+    def storeUrl(url: String): StoredUrlResponse = {
+      // TODO Store URL
+      ???
     }
 
-    private def getUrl(id: Int): Option[StoredUrlResponse] = {
+    def getUrl(id: Int): Option[StoredUrlResponse] = {
       urls.get(id) match {
         case Some(url) =>
           Some(StoredUrlResponse(id, url))
+
         case None =>
           println(s"[warn] Id '$id' does not exist!")
           None
@@ -66,9 +58,8 @@ object Part2_ActorsInRealWorld extends App {
   )
 
   // First step - store the Urls, all at the same time
-  def sendStoreUrlMessage(url: String): Future[Any] = {
-    actor.ask(StoreUrl(url))
-  }
+  def sendStoreUrlMessage(url: String): Future[Any] =
+    ???
 
   val storeResult = Future.traverse(urls)(sendStoreUrlMessage(_))
   val messages    = Await.result(storeResult, 1.second)
@@ -83,7 +74,7 @@ object Part2_ActorsInRealWorld extends App {
   )
 
   def sendGetUrlMessage(id: Int): Future[Any] =
-    actor.ask(GetUrl(id))
+    ???
 
   // Parallel search
   val fetchResult = Future.traverse(ids)(sendGetUrlMessage)
