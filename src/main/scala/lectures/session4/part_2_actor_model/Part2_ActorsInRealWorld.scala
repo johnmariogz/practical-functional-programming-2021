@@ -1,6 +1,7 @@
 package lectures.session4.part_2_actor_model
 
 import akka.actor._
+import akka.pattern._
 import akka.util.Timeout
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -11,8 +12,9 @@ object Part2_ActorsInRealWorld extends App {
   implicit val timeout: Timeout = Timeout(1.second)
 
   case class StoreUrl(url: String)
-  case class StoredUrlResponse(id: Int, url: String)
   case class GetUrl(id: Int)
+
+  case class StoredUrlResponse(id: Int, url: String)
 
   class CacheDBActor extends Actor {
     // Mutable hashmap - mutability is contained within a block
@@ -21,17 +23,19 @@ object Part2_ActorsInRealWorld extends App {
 
     // TODO Count and print how many times storeUrl has been called, how to do it?
     override def receive: Receive = {
-      case StoreUrl(_) =>
-      // TODO Send back to the calling actor the result
+      case StoreUrl(url) =>
+        val message = storeUrl(url)
+        sender() ! message
 
-      case GetUrl(_) =>
-      // TODO Send back to the calling actor the result
-
+      case GetUrl(id) =>
+        val message = getUrl(id)
+        sender() ! message
     }
 
     def storeUrl(url: String): StoredUrlResponse = {
-      // TODO Store URL
-      ???
+      val id: Int = url.hashCode
+      urls.put(id, url)
+      StoredUrlResponse(id, url)
     }
 
     def getUrl(id: Int): Option[StoredUrlResponse] = {
@@ -59,7 +63,7 @@ object Part2_ActorsInRealWorld extends App {
 
   // First step - store the Urls, all at the same time
   def sendStoreUrlMessage(url: String): Future[Any] =
-    ???
+    actor ? StoreUrl(url)
 
   val storeResult = Future.traverse(urls)(sendStoreUrlMessage(_))
   val messages    = Await.result(storeResult, 1.second)
@@ -74,7 +78,7 @@ object Part2_ActorsInRealWorld extends App {
   )
 
   def sendGetUrlMessage(id: Int): Future[Any] =
-    ???
+    actor ? GetUrl(id)
 
   // Parallel search
   val fetchResult = Future.traverse(ids)(sendGetUrlMessage)

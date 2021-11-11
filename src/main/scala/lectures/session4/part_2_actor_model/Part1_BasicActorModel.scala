@@ -12,7 +12,13 @@ object Part1_BasicActorModel extends App {
   case object Finish
 
   class HelloActor extends Actor {
-    override def receive: Receive = ???
+    override def receive: Receive = {
+      case Message(message) =>
+        println(s"You said '$message'. '$message' to you as well!")
+
+      case Finish =>
+        println("That's all folks!")
+    }
   }
 
   val actorSystem = ActorSystem("basic-example")
@@ -24,16 +30,15 @@ object Part1_BasicActorModel extends App {
   def execute(actorRef: ActorRef): Unit = {
     println("Type something (q to quit): ")
     val input = StdIn.readLine()
-    if (input == "q")
-      ??? // TODO: Send Finish to the actor
-    else {
-      //  TODO: Send Message to the actor
+    if (input == "q") {
+      actorReference ! Finish
+    } else {
+      actorReference ! Message(input)
       execute(actorRef)
     }
   }
 
   execute(actorReference)
-  // TODO What happens if we send a message that is not handled?
 
   Await.ready(actorSystem.terminate(), Duration.Inf)
 }

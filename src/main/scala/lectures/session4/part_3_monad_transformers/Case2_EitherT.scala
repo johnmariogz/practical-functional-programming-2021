@@ -1,5 +1,6 @@
 package lectures.session4.part_3_monad_transformers
 
+import cats.data.EitherT
 import exercises.session3.FakeBlog
 import exercises.session3.FakeBlog._
 
@@ -21,7 +22,14 @@ object Case2_EitherT extends App {
   }
 
   def calculateUserScore(id: String): Future[Either[String, Score]] = {
-    ???
+    val transformer: EitherT[Future, String, Score] = for {
+      user     <- EitherT(getUser(id))
+      posts    <- EitherT.liftF(blog.getBlogPosts(user))
+      comments <- EitherT.liftF(blog.getComments(user))
+      // EitherT(Left)
+    } yield Score(user.id, posts.size * 1.0 + comments.size * 0.1)
+
+    transformer.value
   }
 
   def printUserScore(id: String): Unit = {
