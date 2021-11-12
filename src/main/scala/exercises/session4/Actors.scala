@@ -87,7 +87,19 @@ object Actors {
             (StorageIngredientUsed(_), FridgeIngredientNotNeeded) =>
           Container(drink)
 
-        case (_, _) =>
+        case (
+              StorageIngredientUsed(_), // Storage ingredient available + fridge out of stock
+              FridgeOutOfStock(_)
+            ) | (
+              StorageOutOfStock(_), // Storage out of stock + no fridge ingredient needed
+              FridgeIngredientNotNeeded
+            ) | (
+              StorageOutOfStock(_), // Fridge and storage out of stock
+              FridgeOutOfStock(_)
+            ) | (
+              StorageOutOfStock(_), // Storage out of stock + fridge ingredient available
+              FridgeIngredientUsed(_)
+            ) =>
           RefundVoucher(drink)
       }
 
@@ -105,22 +117,22 @@ object Actors {
   case class GetFromStorage(storageIngredient: StorageIngredient)
 
   sealed trait StorageResult
-  case class StorageOutOfStock(ingredient: StorageIngredient)     extends StorageResult
   case class StorageIngredientUsed(ingredient: StorageIngredient) extends StorageResult
+  case class StorageOutOfStock(ingredient: StorageIngredient)     extends StorageResult
 
   sealed trait FridgeResult
   case object FridgeIngredientNotNeeded                         extends FridgeResult
-  case class FridgeOutOfStock(ingredient: FridgeIngredient)     extends FridgeResult
   case class FridgeIngredientUsed(ingredient: FridgeIngredient) extends FridgeResult
+  case class FridgeOutOfStock(ingredient: FridgeIngredient)     extends FridgeResult
 
   class InventoryActor extends Actor {
     private val fridge: mutable.Map[FridgeIngredient, Int] =
-      scala.collection.mutable.HashMap[FridgeIngredient, Int](
+      mutable.HashMap[FridgeIngredient, Int](
         Milk -> 4
       )
 
     private val storage: mutable.Map[StorageIngredient, Int] =
-      scala.collection.mutable.HashMap[StorageIngredient, Int](
+      mutable.HashMap[StorageIngredient, Int](
         Coffee -> 6,
         Cocoa  -> 2
       )
@@ -133,35 +145,51 @@ object Actors {
         sender() ! getAndReduceFromStorage(storageIngredient)
     }
 
-    def getAndReduceFromStorage(ingredient: StorageIngredient): StorageResult = {
-      storage.get(ingredient) match {
-        case Some(amount) if amount > 0 =>
-          storage.update(ingredient, amount - 1)
-          StorageIngredientUsed(ingredient)
+    def getAndReduceFromStorage(ingredient: StorageIngredient): StorageResult =
+      reduceInventoryAndReturnResult[
+        StorageIngredient,
+        StorageResult,
+        StorageIngredientUsed,
+        StorageOutOfStock
+      ](
+        storage
+      )(StorageIngredientUsed, StorageOutOfStock)(ingredient)
 
-        case Some(_) | None =>
-          StorageOutOfStock(ingredient)
-      }
-    }
-
-    def getAndReduceFromFridge(maybeIngredient: Option[FridgeIngredient]): FridgeResult = {
-      // If there's enough of the ingredient: return FridgeIngredientUsed
-      // If not enough: return FridgeOutOfStock
-      // If the ingredient is not needed: return FridgeIngredientNotNeeded
+    def getAndReduceFromFridge(maybeIngredient: Option[FridgeIngredient]): FridgeResult =
       maybeIngredient match {
         case Some(ingredient) =>
-          fridge.get(ingredient) match {
-            case Some(amount) if amount > 0 =>
-              fridge.update(ingredient, amount - 1)
-              FridgeIngredientUsed(ingredient)
-
-            case Some(_) | None =>
-              FridgeOutOfStock(ingredient)
-          }
+          reduceInventoryAndReturnResult[
+            FridgeIngredient,
+            FridgeResult,
+            FridgeIngredientUsed,
+            FridgeOutOfStock
+          ](fridge)(
+            FridgeIngredientUsed(_), // function Ingredient => FridgeIngredientUsed
+            FridgeOutOfStock(_)      // function Ingredient => FridgeOutOfStock
+          )(ingredient)
 
         case None =>
           FridgeIngredientNotNeeded
       }
-    }
+
+    private def reduceInventoryAndReturnResult[
+        Ing <: Ingredient,
+        Result,
+        Presence <: Result,
+        Absence <: Result
+    ](
+        database: mutable.Map[Ing, Int]
+    )(
+        presence: Ing => Presence,
+        absence: Ing => Absence
+    )(ingredient: Ing): Result =
+      database.get(ingredient) match {
+        case Some(amount) if amount > 0 =>
+          database.update(ingredient, amount - 1)
+          presence(ingredient)
+
+        case Some(_) | None =>
+          absence(ingredient)
+      }
   }
 }

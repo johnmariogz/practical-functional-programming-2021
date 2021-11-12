@@ -1,0 +1,47 @@
+@startuml
+title "Café with Actors"
+
+(Waiting Queue) as queue
+:Cashier 1: as cashier1
+:Cashier 2: as cashier2
+:Barista 1: as barista1
+:Barista 2: as barista2
+package "Inventory Management" {
+    :Inventory: as (inventory)
+    (Fridge) as (fridge)
+    (Storage) as (storage)
+}
+:Customer\nEspresso: as customer1
+:Customer\nEspresso: as customer2
+:Customer\nEspresso: as customer3
+:Customer\nLatte Macchiato: as customer4
+:Customer\nLatte Macchiato: as customer5
+:Customer\nHot Chocolate: as customer6
+:Customer\nEspresso: as customer7
+:Customer\nHot Chocolate: as customer8
+:Customer\nHot Chocolate: as customer9
+:Customer\nLatte Macchiato: as customer10
+
+customer1 --> queue
+customer2 --> queue
+customer3 --> queue
+customer4 --> queue
+customer5 --> queue
+customer6 --> queue
+customer7 --> queue
+customer8 --> queue
+customer9 --> queue
+customer10 --> queue
+
+queue --> cashier1
+queue --> cashier2
+
+cashier1 ---> barista1
+cashier1 ---> barista2
+cashier2 ---> barista1
+cashier2 ---> barista2
+barista1 --> inventory
+barista2 --> inventory
+inventory --> fridge
+inventory --> storage
+@enduml
