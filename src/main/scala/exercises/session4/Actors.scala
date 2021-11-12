@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorRef}
 import akka.pattern._
 import akka.util.Timeout
 
+import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -56,15 +57,16 @@ object Actors {
       actor
     }
 
-    override def receive: Receive = {
-      case Purchase(drink, _) =>
-        // TODO Store the tips (coming within Purchase)
+    private var tips = 0d
 
+    override def receive: Receive = {
+      case Purchase(drink, tip) =>
+        tips += tip
         // Pass the drink orders one of the baristas
-        barista ! Order(drink, ???) // TODO: Pass the customer (the sender())
+        barista ! Order(drink, sender())
 
       case GetTips =>
-      // TODO: Send back the message informing how much has been left in tips
+        sender() ! TotalTipsResponse(tips)
     }
   }
 
@@ -90,11 +92,10 @@ object Actors {
       }
 
     override def receive: Receive = { case Order(drink, customer) =>
-      // TODO: Call the inventory to see what is available and get it out
       val preparationResult: Future[PurchasedOrder] = for {
         storage <- (inventory ? GetFromStorage(drink.storageIngredient)).mapTo[StorageResult]
-        // TODO: Call the inventory for the fridge ingredients
-      } yield prepareOrder(drink, storage, ???)
+        fridge  <- (inventory ? GetFromFridge(drink.fridgeIngredient)).mapTo[FridgeResult]
+      } yield prepareOrder(drink, storage, fridge)
 
       preparationResult.pipeTo(customer)
     }
@@ -113,36 +114,54 @@ object Actors {
   case class FridgeIngredientUsed(ingredient: FridgeIngredient) extends FridgeResult
 
   class InventoryActor extends Actor {
-    val fridge = scala.collection.mutable.HashMap[FridgeIngredient, Int](
-      Milk -> 4
-    )
+    private val fridge: mutable.Map[FridgeIngredient, Int] =
+      scala.collection.mutable.HashMap[FridgeIngredient, Int](
+        Milk -> 4
+      )
 
-    val storage = scala.collection.mutable.HashMap[StorageIngredient, Int](
-      Coffee -> 6,
-      Cocoa  -> 2
-    )
+    private val storage: mutable.Map[StorageIngredient, Int] =
+      scala.collection.mutable.HashMap[StorageIngredient, Int](
+        Coffee -> 6,
+        Cocoa  -> 2
+      )
 
     override def receive: Receive = {
-      case _: GetFromFridge =>
-      // TODO: Call getAndReduceFromFridge() and send back to whoever called (use sender() to find the caller)
+      case GetFromFridge(fridgeIngredient) =>
+        sender() ! getAndReduceFromFridge(fridgeIngredient)
 
-      case _: GetFromStorage =>
-      // TODO: Call getAndReduceFromStorage() and send back result to whoever called (use sender() to find the caller)
+      case GetFromStorage(storageIngredient) =>
+        sender() ! getAndReduceFromStorage(storageIngredient)
     }
 
-    // TODO: Reduce from the storage stock IFF the ingredient's quantity is positive
     def getAndReduceFromStorage(ingredient: StorageIngredient): StorageResult = {
-      // If there's enough of the ingredient: return StorageIngredientUsed
-      // If not enough: return StorageOutOfStock
-      ???
+      storage.get(ingredient) match {
+        case Some(amount) if amount > 0 =>
+          storage.update(ingredient, amount - 1)
+          StorageIngredientUsed(ingredient)
+
+        case Some(_) | None =>
+          StorageOutOfStock(ingredient)
+      }
     }
 
-    // TODO: Reduce from the fridge stock IFF the ingredient's quantity is positive
-    def getAndReduceFromFridge(ingredient: Option[FridgeIngredient]): FridgeResult = {
+    def getAndReduceFromFridge(maybeIngredient: Option[FridgeIngredient]): FridgeResult = {
       // If there's enough of the ingredient: return FridgeIngredientUsed
       // If not enough: return FridgeOutOfStock
       // If the ingredient is not needed: return FridgeIngredientNotNeeded
-      ???
+      maybeIngredient match {
+        case Some(ingredient) =>
+          fridge.get(ingredient) match {
+            case Some(amount) if amount > 0 =>
+              fridge.update(ingredient, amount - 1)
+              FridgeIngredientUsed(ingredient)
+
+            case Some(_) | None =>
+              FridgeOutOfStock(ingredient)
+          }
+
+        case None =>
+          FridgeIngredientNotNeeded
+      }
     }
   }
 }
