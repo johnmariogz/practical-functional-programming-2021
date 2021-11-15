@@ -28,3 +28,13 @@
 - Monad Transformers
   - Using `OptionT` to extend the `FakeBlog` case
   - Using `EitherT` to handle information about what went wrong with `FakeBlog`
+
+# Session 5
+- Tagless Final
+  - Meaning and applications
+- HTTP Servers
+  - Parsing as JSON
+  - Usage with Tagless Final libraries
+- Database Usage
+  - Connection to database
+  - Queries

@@ -16,7 +16,7 @@ object TaglessFinalUsage extends App {
     def getBlogPosts(user: User): F[List[BlogPost]]
     def getComments(user: User): F[List[Comment]]
 
-    def calculateUserScore(userId: UserId): F[Option[Score]] = {
+    final def calculateUserScore(userId: UserId): F[Option[Score]] = {
       val transformer: OptionT[F, Score] = for {
         user     <- OptionT(getUser(userId))
         comments <- OptionT.liftF(getComments(user))
