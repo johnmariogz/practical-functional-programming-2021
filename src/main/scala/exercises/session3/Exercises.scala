@@ -1,6 +1,6 @@
 package exercises.session3
 
-import exercises.session3.FakeBlog._
+import exercises.shared.FakeBlog._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

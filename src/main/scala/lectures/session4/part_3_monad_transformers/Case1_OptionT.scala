@@ -2,8 +2,8 @@ package lectures.session4.part_3_monad_transformers
 
 import cats.implicits._
 import cats.data.OptionT
-import exercises.session3.FakeBlog
-import exercises.session3.FakeBlog._
+import exercises.shared.FakeBlog._
+import exercises.shared.FakeBlog
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
