@@ -1,24 +1,22 @@
-package lectures.session5
+package lectures.session5.part1_tagless_final
 
 import cats.Monad
 import cats.data.OptionT
-import cats.effect.IO
-import cats.effect.unsafe
+import cats.effect.{IO, unsafe}
 import exercises.shared.FakeBlog._
 
-import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
-object Part1_TaglessFinal extends App {
+object TaglessFinalUsage extends App {
   abstract class Repository[F[_]: Monad] {
     def getUser(userId: UserId): F[Option[User]]
     def getAllUsers(): F[List[User]]
     def getBlogPosts(user: User): F[List[BlogPost]]
     def getComments(user: User): F[List[Comment]]
 
-    def calculateUserScore(id: String): F[Option[Score]] = {
-      val userId = UserId(id)
+    def calculateUserScore(userId: UserId): F[Option[Score]] = {
       val transformer: OptionT[F, Score] = for {
         user     <- OptionT(getUser(userId))
         comments <- OptionT.liftF(getComments(user))
@@ -57,7 +55,7 @@ object Part1_TaglessFinal extends App {
       ???
   }
 
-  def printExecution(name: String, f: String => Option[Score]): Unit = {
+  def printExecution(name: String, f: UserId => Option[Score]): Unit = {
     val userIds = List(
       "user1",
       "user2",
@@ -66,7 +64,7 @@ object Part1_TaglessFinal extends App {
 
     println(s"===[Start] $name ===")
     userIds.foreach { userId =>
-      val result = f(userId)
+      val result = f(UserId(userId))
       println(s"\t$userId = $result")
     }
     println(s"===[End] $name ===")

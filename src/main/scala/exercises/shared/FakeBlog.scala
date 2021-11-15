@@ -3,7 +3,13 @@ package exercises.shared
 import scala.concurrent.Future
 
 object FakeBlog {
-  case class UserId(id: String) extends AnyVal
+  case class UserId(id: String)
+  object UserId {
+    def unapply(str: String): Option[UserId] =
+      if (str.nonEmpty) Some(UserId(str))
+      else None
+  }
+
   case class User(id: UserId, authorName: String)
   case class BlogPostId(id: Int) extends AnyVal
   case class BlogPost(id: BlogPostId, userId: UserId, title: String, text: String)
