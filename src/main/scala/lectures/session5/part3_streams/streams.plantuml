@@ -1,0 +1,22 @@
+@startuml
+skinparam databaseBackgroundColor Aqua
+database "Fahrenheit Measurements File [30 Gigabytes]" as input_file
+database "Celsius Measurements File" as output_file
+
+[Step 1: Read file] as step1
+[Step 2: Parse each line] as step2
+[Step 3: Convert from Fahrenheit to Celsius (if possible)] as step3
+interface "split" as split
+[Step 4: Separate conversions from failed lines] as step4
+[Step 5: Store results in file] as step5
+[Step 6: Print all results] as step6
+
+input_file --> step1
+step1 --> step2
+step2 --> step3
+step3 --> split
+split --> step4
+split --> step6
+step4 --> step5
+step5 --> output_file
+@enduml

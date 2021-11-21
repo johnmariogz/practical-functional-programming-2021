@@ -20,6 +20,7 @@ libraryDependencies ++= Seq(
   "io.circe"   %% "circe-generic" % "0.14.1",
   "org.typelevel" %% "cats-effect" % "3.2.9",
   "com.typesafe.akka" %% "akka-actor" % "2.6.17",
+  "com.typesafe.akka" %% "akka-stream" % "2.6.17",
   "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.4",
   "com.typesafe.akka" %% "akka-testkit" % "2.6.17" % Test,
   "org.scalatest" %% "scalatest" % "3.2.10" % Test

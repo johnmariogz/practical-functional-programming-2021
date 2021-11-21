@@ -10,7 +10,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
 object TaglessFinalUsage extends App {
-  abstract class Repository[F[_]: Monad] {
+  sealed abstract class Repository[F[_]: Monad] {
     def getUser(userId: UserId): F[Option[User]]
     def getAllUsers(): F[List[User]]
     def getBlogPosts(user: User): F[List[BlogPost]]
