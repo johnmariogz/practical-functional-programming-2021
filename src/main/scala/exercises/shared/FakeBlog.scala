@@ -1,9 +1,15 @@
-package exercises.session3
+package exercises.shared
 
 import scala.concurrent.Future
 
 object FakeBlog {
-  case class UserId(id: String) extends AnyVal
+  case class UserId(id: String)
+  object UserId {
+    def unapply(str: String): Option[UserId] =
+      if (str.nonEmpty) Some(UserId(str))
+      else None
+  }
+
   case class User(id: UserId, authorName: String)
   case class BlogPostId(id: Int) extends AnyVal
   case class BlogPost(id: BlogPostId, userId: UserId, title: String, text: String)
@@ -11,12 +17,12 @@ object FakeBlog {
   case class Comment(id: CommentId, blogPostId: BlogPostId, userId: UserId, text: String)
   case class Score(userId: UserId, score: Double)
 
-  private[session3] val user1 = User(UserId("user1"), "authorName1")
-  private[session3] val user2 = User(UserId("user2"), "authorName2")
-  private[session3] val user3 = User(UserId("user3"), "authorName3")
-  private[session3] val user4 = User(UserId("user4"), "authorName4")
+  val user1 = User(UserId("user1"), "authorName1")
+  val user2 = User(UserId("user2"), "authorName2")
+  val user3 = User(UserId("user3"), "authorName3")
+  val user4 = User(UserId("user4"), "authorName4")
 
-  private val users: Map[UserId, User] = Map(
+  val users: Map[UserId, User] = Map(
     user1.id -> user1,
     user2.id -> user2,
     user3.id -> user3,
@@ -28,7 +34,7 @@ object FakeBlog {
   private val post3 = BlogPost(BlogPostId(3), user2.id, "title3", "content3")
   private val post4 = BlogPost(BlogPostId(4), user1.id, "title4", "content4")
 
-  private val blogPostsPerUser: Map[UserId, List[BlogPost]] = List(
+  val blogPostsPerUser: Map[UserId, List[BlogPost]] = List(
     post1,
     post2,
     post3,
@@ -44,7 +50,7 @@ object FakeBlog {
   private val comment7 = Comment(CommentId(7), post1.id, user2.id, "comment7")
   private val comment8 = Comment(CommentId(8), post1.id, user1.id, "comment8")
 
-  private val commentsPerBlogPost: Map[UserId, List[Comment]] = List(
+  val commentsPerBlogPost: Map[UserId, List[Comment]] = List(
     comment1,
     comment2,
     comment3,

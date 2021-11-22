@@ -5,7 +5,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class ExercisesTest extends AnyFlatSpec with Matchers with ScalaFutures {
-  import FakeBlog._
+  import exercises.shared.FakeBlog._
   import Exercises._
 
   "#calculateUserScore" should "calculate the score for user1" in {

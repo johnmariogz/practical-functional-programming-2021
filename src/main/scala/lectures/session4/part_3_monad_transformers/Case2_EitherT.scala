@@ -1,8 +1,8 @@
 package lectures.session4.part_3_monad_transformers
 
 import cats.data.EitherT
-import exercises.session3.FakeBlog
-import exercises.session3.FakeBlog._
+import exercises.shared.FakeBlog._
+import exercises.shared.FakeBlog
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._

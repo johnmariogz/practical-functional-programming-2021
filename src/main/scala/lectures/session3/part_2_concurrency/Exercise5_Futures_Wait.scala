@@ -1,5 +1,7 @@
 package lectures.session3.part_2_concurrency
 
+import exercises.shared.Helpers
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
