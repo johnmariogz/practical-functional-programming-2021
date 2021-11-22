@@ -118,8 +118,8 @@ object Streams extends App {
           // format: off
           //[- step 1 -] -> [-------- step 2 ----------] -> [-------- step 3 --------] -> [ split ] -> [------------------- step 4 --------------------] -> [--- step 5 ---]
           sourceReadFile ~> splitLine ~> convertToString ~> convertFahrenheitToCelsius ~> broadcast ~> separateConversions ~> convertDegreesToByteString ~> storeToFileSink
-          //                                                                              [ split ] -> [-step 6-]
                                                                                           broadcast ~> printSink
+          //                                                                              [ split ] -> [-step 6-]
           // format: on
           ClosedShape
       }

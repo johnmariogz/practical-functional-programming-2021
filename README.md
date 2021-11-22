@@ -32,6 +32,9 @@
 # Session 5
 - Tagless Final
   - Meaning and applications
+- Streaming
+  - Usages of streaming
+  - How to deal with too many elements
 - HTTP Servers
   - Parsing as JSON
   - Usage with Tagless Final libraries
