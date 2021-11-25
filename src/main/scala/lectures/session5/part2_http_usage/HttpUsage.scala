@@ -16,12 +16,42 @@ object HttpUsage extends App {
   val repository = IORepository
 
   val app = HttpRoutes
-    .of[IO] { case req @ POST -> Root / "user-score" =>
-      for {
-        userId   <- req.as[UserId]
-        result   <- repository.calculateUserScore(userId)
-        response <- Ok(result)
-      } yield response
+    .of[IO] {
+      case req @ POST -> Root / "user-score" =>
+        for {
+          userId   <- req.as[UserId]
+          result   <- repository.calculateUserScore(userId)
+          response <- Ok(result)
+        } yield response
+
+        // GET /users/:id => user :)
+      case _@ GET -> Root / "users" / UserId(userId) =>
+        for {
+          user <- repository.getUser(userId)
+          response <- user match {
+            case Some(actualUser) =>
+              Ok(actualUser)
+
+            case None =>
+              NotFound()
+          }
+        } yield response
+
+        // GET /users/{id}/posts
+      case _@ GET -> Root / "users" / UserId(userId) / "posts"  =>
+        for {
+          user <- repository.getUser(userId)
+          response <- user match {
+            case Some(actualUser) =>
+              for {
+                posts <- repository.getBlogPosts(actualUser)
+                response <- Ok(posts)
+              } yield response
+
+            case None =>
+              Gone()
+          }
+        } yield response
 
     // TODO Implement endpoints to return user, comments and posts
     }

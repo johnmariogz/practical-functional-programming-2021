@@ -13,7 +13,7 @@ object Example extends App with DatabaseStart with DatabaseBoilerplate {
     db         <- startDatabase()
     _          <- applyMigrations(db)
     transactor <- buildTransactor(db)
-    userNames  <- IO.pure(List("Yoab", "Alexey", "Chris"))
+    userNames  <- IO.pure(List("Yoav", "Alexey", "Chris"))
     _          <- executeDatabaseQueries(userNames).transact(transactor)
   } yield ()
 

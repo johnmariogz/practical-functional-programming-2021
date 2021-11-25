@@ -58,7 +58,7 @@ object Streams extends App {
     buildTemperatureProcessingStream(
       SourceFile,
       FinalFile,
-      1
+      8
     ) // TODO - What if we change the parallelism?
   }
 
